@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQI Plant Dashboard</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <!-- Location Info -->
+    <div class="location-info">
+        <span class="location-icon">📍</span>
+        <span class="location-name">Chandigarh, India</span>
+        <div class="datetime" style="padding-top: 30px;">Today, Nov 29 5:10</div>
+        <div class="aqi-display">343<span class="aqi-unit">AQI</span>
+            
+        </div>
+        <div class="aqi-status">POOR</div>
+        
+    </div>
+
+    <!-- Plant of the Day -->
+    <div class="plant-of-day">
+        <div class="plant-of-day-inner">
+            <h2>Plant of the Day</h2>
+            <div class="plant-image-placeholder"><img src="plantofDay.jpg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"></div>
+            <button class="expand-arrow">↓</button>
+        </div>
+    </div>
+
+    <!-- Suggested Plant -->
+    <div class="suggested-plant">
+        <h3>Our Pick: Spider Plant</h3>
+        <div class="plant-image-placeholder"><img src="1.jpg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"></div>
+        <p>Despite their creepy-crawly name, spider plants (Chlorophytum comosum) are among the most popular houseplants.</p>
+    </div>
+
+    <!-- Settings Button -->
+    <button class="settings-btn">⚙️</button>
+    <div class="settings-dialog">
+        <!-- Settings content will go here -->
+         <p>These are settings</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
