@@ -25,70 +25,45 @@ export const Navbar = () => {
             >
               Login
             </button>
-            <button
-              data-collapse-toggle="navbar-sticky"
-              type="button"
-              className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-green-800 rounded-lg md:hidden hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-300"
-              aria-controls="navbar-sticky"
-              aria-expanded="false"
-            >
-              <span className="sr-only">Open main menu</span>
-              <svg
-                className="w-5 h-5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 17 14"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M1 1h15M1 7h15M1 13h15"
-                />
-              </svg>
+            {/* Profile Button next to the Login button */}
+            <button className="flex items-center space-x-2 p-2 rounded-lg hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-300">
+              <img
+                src="https://via.placeholder.com/40" // Replace with your profile image URL
+                alt="Profile"
+                className="w-8 h-8 rounded-full"
+              />
+              <span className="text-green-800">Profile</span>
             </button>
           </div>
           <div
             className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
             id="navbar-sticky"
           >
-            <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-white md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white">
-              <li>
-                <a
-                  href="#"
-                  className="block py-4 px-6 text-lg text-green-800 hover:bg-green-800 hover:text-white rounded md:bg-transparent md:p-0"
-                  aria-current="page"
+            <div className="flex items-center space-x-4">
+              {/* Search Bar */}
+              <input
+                type="text"
+                placeholder="Search..."
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300"
+              />
+              {/* Bell Icon */}
+              <button className="relative flex items-center justify-center p-2 rounded-lg hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-300">
+                <svg
+                  className="w-6 h-6 text-green-800"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block py-4 px-6 text-lg text-green-800 hover:bg-green-800 hover:text-white rounded md:bg-transparent md:p-0"
-                >
-                  About
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block py-4 px-6 text-lg text-green-800 hover:bg-green-800 hover:text-white rounded md:bg-transparent md:p-0"
-                >
-                  Store
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block py-4 px-6 text-lg text-green-800 hover:bg-green-800 hover:text-white rounded md:bg-transparent md:p-0"
-                >
-                  Contact
-                </a>
-              </li>
-            </ul>
+                  <path d="M18 15c0 1.104-.896 2-2 2H8c-1.104 0-2-.896-2-2V4c0-1.104.896-2 2-2h8c1.104 0 2 .896 2 2v11zM12 19c1.104 0 2 .896 2 2H10c0-1.104.896-2 2-2z"></path>
+                </svg>
+                {/* Notification Badge (Optional) */}
+                <span className="absolute top-0 right-0 block w-2 h-2 bg-red-600 rounded-full"></span>
+              </button>
+            </div>
           </div>
         </div>
       </nav>
