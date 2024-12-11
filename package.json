@@ -1,0 +1,32 @@
+{
+  "name": "pureup",
+  "version": "1.0.0",
+  "description": "PureUp is an innovative web application designed to promote environmental awareness by suggesting a unique \"Plant of the Day\" to users. The application aims to encourage sustainable practices and inspire individuals to connect with nature. This project was developed during HackFrost Hackathon 2024.\r ## Features",
+  "main": "index.js",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shruti110503/PureUp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shruti110503/PureUp/issues"
+  },
+  "homepage": "https://github.com/shruti110503/PureUp#readme",
+  "devDependencies": {
+    "vite": "^6.0.3"
+  },
+  "dependencies": {
+    "prop-types": "^15.8.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "swiper": "^11.1.15"
+  }
+}

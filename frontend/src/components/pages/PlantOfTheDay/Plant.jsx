@@ -3,7 +3,7 @@ import React from 'react';
 export const Plant = () => {
   return (
     <div
-      className="w-[600px] h-[350px] flex flex-col rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 md:max-w-xl md:flex-row">
+      className="w-[400px] h-[350px] flex flex-col rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 md:max-w-xl md:flex-row">
       
       <div className="flex flex-col justify-start p-6">
         <h5
@@ -11,7 +11,7 @@ export const Plant = () => {
           Plant Of The Day: Aloe Vera
         </h5>
         <p className="mb-4 text-base text-neutral-600 dark:text-neutral-200">
-          Aloe Vera is a versatile plant known for its soothing and healing properties. It is widely used in skincare, medicinal treatments, and as a natural remedy for various ailments. Easy to grow and maintain, it’s a must-have for any plant lover.
+          Aloe Vera is a versatile plant known for its soothing and healing properties. It is widely used in skincare, medicinal treatments, and as a natural remedy for various ailments. Easy to grow and maintain.
         </p>
         <p className="text-xs text-neutral-500 dark:text-neutral-300">
           Last updated 3 mins ago

@@ -21,8 +21,8 @@ export const Footer = () => {
               </h2>
               <ul className="text-gray-500 dark:text-gray-400 font-medium">
                 <li className="mb-4">
-                  <a href="https://PurUp.com/" className="hover:underline">
-                    PurUp
+                  <a href="https://PureUp.com/" className="hover:underline">
+                    PureUp
                   </a>
                 </li>
                 <li>
@@ -81,8 +81,8 @@ export const Footer = () => {
         <div className="sm:flex sm:items-center sm:justify-between">
           <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
             © 2024{" "}
-            <a href="https://PurUp.com/" className="hover:underline">
-              PurUp™
+            <a href="https://PureUp.com/" className="hover:underline">
+              PureUp™
             </a>
             . All Rights Reserved.
           </span>
