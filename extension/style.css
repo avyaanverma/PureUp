@@ -1,0 +1,274 @@
+@import url("https://fonts.googleapis.com/css2?family=Voltaire&display=swap");
+
+.voltaire-regular {
+  font-family: "Voltaire", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Voltaire Frangela Regular";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Voltaire Frangela Regular"),
+    url("./fonts/Voltaire-Frangela.woff") format("woff");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+:root {
+  --contaniner-width: 550px;
+}
+body {
+  height: 600px;
+  width: var(--contaniner-width);
+  gap: 20px;
+  padding: 20px;
+  background: #f5f5f5;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+
+.logo {
+  width: 150px;
+}
+
+.container-top {
+  
+  display: flex;
+  justify-content: space-between; /* Ensures sections are placed side-by-side */
+  align-items: flex-start;
+  position: relative;
+  transition: all;
+  top: 0;
+  transition-duration: 1000ms;
+}
+
+.movebottom {
+  top: 320px;
+  opacity: 0;
+}
+
+/* Weather Info Section */
+.weather-info-container {
+  display: flex;
+}
+.weather-info-spacer {
+  display: flex;
+  width: 80px;
+}
+.weather-info {
+  height: 150px;
+  width: 200px;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 50px;
+  align-items: end;
+}
+.weather-info-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #eb7e18;
+  border-radius: 100px;
+}
+.weather-info-title {
+  width: 100px;
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  align-self: flex-start;
+}
+
+.weather-aqi-status {
+  color: red;
+  font-size: 0.8rem;
+  text-align: right;
+}
+
+.weather-aqi-display {
+  color: #ff7b16;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  font-size: 3em;
+  font-weight: 300;
+  margin: 5px 0px 5px 0px;
+}
+
+.location-icon {
+  font-size: 24px;
+}
+
+.location-name {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.datetime {
+  padding: 0;
+  color: rgba(232, 11, 11, 0.8);
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* Right Container */
+
+.container-right {
+  padding-top: 80px;
+  display: flex;
+  justify-content: end;
+  position: relative;
+}
+.container-right img {
+  height: 250px;
+}
+
+.plant-of-day-content {
+  position: absolute;
+  left: 0px;
+  padding: 20px 10px;
+}
+.plant-of-day-text {
+  color: #150637;
+  font-size: 40px;
+  width: 50px;
+  font-family: "Voltaire Frangela Regular";
+}
+.expand-arrow {
+  position: absolute;
+  cursor: pointer;
+  rotate: -90deg;
+  bottom: 20px;
+  right: 10px;
+}
+.compress-arrow {
+  position: absolute;
+  cursor: pointer;
+  rotate: 90deg;
+  bottom: 20px;
+  right: 50px;
+  opacity: 0;
+  transition: all;
+  transition-duration: 1000ms;
+}
+.expand-arrow img {
+  width: 25px;
+  height: 25px;
+}
+.compress-arrow img {
+  width: 25px;
+  height: 25px;
+}
+.opacity-full {
+  opacity: 1;
+}
+
+/* Settings Button */
+.settings-btn {
+  position: fixed;
+  height: 50px;
+  width: 50px;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.settings-btn img {
+  width: 30px;
+  height: 30px;
+}
+/* Settings Dialog */
+.settings-dialog {
+  display: none;
+  position: fixed;
+  top: 50px;
+  right: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Bottom Container */
+
+.container-bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Aligns content within the section */
+  height: 100%; /* Matches the height of the tallest sibling */
+  position: absolute;
+  transition: all;
+  transition-duration: 1000ms;
+  top: 280px;
+}
+
+.movetop {
+  top: 20px;
+}
+
+/* Suggested Plant Section */
+
+.suggested-plant {
+  
+  height: 300px;
+  width: 295px;
+  grid-column: 1;
+  grid-row: 2;
+  background: #233040;
+  color: white;
+  padding: 20px;
+  
+  margin-right: auto;
+  
+  border-radius: 10px;
+  transition: all;
+  transition-duration: 1000ms;
+}
+.expand {
+  width: 95%;
+  height: var(--contaniner-width);
+}
+.suggested-plant-title-container {
+  position: relative;
+  height: 100px;
+  display: flex;
+  gap: 30px;
+}
+.suggested-plant-title {
+  font-size: 40px;
+  font-family: "Voltaire Frangela Regular";
+  color: #dad2cc;
+}
+.suggested-plant-img-container {
+  width: 100px;
+  height: 150px;
+}
+.suggested-plant-title-container img {
+  width: 150px;
+  position: absolute;
+  top: -50px;
+  left: -20px;
+}
+.suggested-plant-description {
+  margin: 30px 5px;
+  font-size: 14px;
+  font-family: "Voltaire Frangela Regular";
+}
+.suggested-plant-more{
+    display: none;
+}
+.suggested-plant-more-visible{
+    display: block;
+}
