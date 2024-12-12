@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQI Plant Dashboard</title>
+    <style>
+        /* (existing CSS styles) */
+        * {
+            margin: 0;
+            padding: 0;
+            height: 500px;
+            width: 500px;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        /* Location Info Section */
+        .location-info {
+            grid-column: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .location-icon {
+            font-size: 24px;
+        }
+
+        .location-name {
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .datetime {
+            color: rgba(232, 11, 11, 0.8);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .aqi-display {
+            font-size: 82px;
+            font-weight: 300;
+            margin: 20px 0;
+        }
+
+        .aqi-unit {
+            font-size: 32px;
+            vertical-align: top;
+        }
+
+        .aqi-status {
+            color: red;
+            font-size: 18px;
+            position: absolute;
+            transform: rotate(90deg) translateX(10px); /* Adjust the X value for fine control */
+            transform-origin: top right;
+            right: 650px; /* Keep this small for better adjustment */
+            top: 30%;
+        }
+
+        /* Plant of Day Section */
+        .plant-of-day {
+            grid-column: 2;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .plant-of-day h2 {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .plant-image-placeholder {
+            width: 100%;
+            height: 200px;
+            background: #eee;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+
+        .expand-arrow {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Suggested Plant Section */
+        .suggested-plant {
+            grid-column: 1;
+            grid-row: 2;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Settings Button */
+        .settings-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Settings Dialog */
+        .settings-dialog {
+            display: none;
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Expanded/Compressed States */
+        .expanded {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .compressed {
+            grid-column: 2;
+            grid-row: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Location Info -->
+    <div class="location-info">
+        <!-- (existing location info) -->
+        <span class="location-icon">📍</span>
+        <span class="location-name">Chandigarh, India</span>
+        <br>
+        <div class="datetime" style="padding-top: 30px;">Today, Nov 29 5:10</div>
+        <div class="aqi-display">343<span class="aqi-unit">AQI</span>
+            
+        </div>
+        <div class="aqi-status">POOR</div>
+    </div>
+
+    <!-- Plant of the Day -->
+    <div class="plant-of-day">
+        <!-- (existing plant of the day) -->
+        <h2>Plant of the Day</h2>
+        <div class="plant-image-placeholder"><img src="2.jpg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"></div>
+        <button class="expand-arrow">↓</button>
+    </div>
+
+    <!-- Suggested Plant -->
+    <div class="suggested-plant">
+        <div id="suggested-plant-carousel"></div>
+    </div>
+
+    <!-- Settings Button -->
+    <button class="settings-btn">⚙️</button>
+    <div class="settings-dialog">
+        <!-- (existing settings dialog) -->
+    </div>
+
+    <script type="module" src="./SuggestedPlantCarousel.js">
+        import SuggestedPlantCarousel from './SuggestedPlantCarousel.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const root = ReactDOM.createRoot(document.getElementById('suggested-plant-carousel'));
+            root.render(React.createElement(SuggestedPlantCarousel));
+
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const plantOfDay = document.querySelector('.plant-of-day');
+            const suggestedPlant = document.querySelector('.suggested-plant');
+            const expandArrow = document.querySelector('.expand-arrow');
+            const settingsBtn = document.querySelector('.settings-btn');
+            const settingsDialog = document.querySelector('.settings-dialog');
+
+            // Toggle sections
+            expandArrow.addEventListener('click', () => {
+                plantOfDay.classList.toggle('expanded');
+                suggestedPlant.classList.toggle('compressed');
+                expandArrow.textContent = plantOfDay.classList.contains('expanded') ? '↑' : '↓';
+            });
+
+            // Toggle settings dialog
+            settingsBtn.addEventListener('click', () => {
+                settingsDialog.style.display = 
+                    settingsDialog.style.display === 'none' ? 'block' : 'none';
+            });
+
+            // Close settings dialog when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!settingsBtn.contains(e.target) && 
+                    !settingsDialog.contains(e.target)) {
+                    settingsDialog.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
