@@ -4,24 +4,27 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import Dashboard from './components/Dashboard/Dashboard';
-import Store from './components/Store/Store';
-import './App.css';
-
+import Dashboard from "./components/Dashboard/Dashboard";
+import Store from "./components/Store/Store";
+import ShopContextProvider from "./context/ShopContext"; // Import context provider
+import "./App.css";
+import Product from "./pages/Product";
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path="/" element={<Dashboard />}>
+      <Route>
+        <Route path="/" element={<Dashboard />} />
         <Route path="/store" element={<Store />} />
+        <Route path="/store/:productId" element = {<Product/>}/>
       </Route>
     )
   );
 
   return (
-    <>
+    <ShopContextProvider> {/* ✅ Wrap the provider here */}
       <RouterProvider router={router} />
-    </>
+    </ShopContextProvider>
   );
 }
 
