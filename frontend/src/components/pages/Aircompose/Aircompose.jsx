@@ -1,13 +1,12 @@
-import React, { useEffect, useRef } from 'react';
-import Chart from 'chart.js/auto';
+import React, { useEffect, useRef } from "react";
+import Chart from "chart.js/auto";
 
 export const Aircompose = () => {
-  const chartRef = useRef(null); // Ref to hold the chart instance
+  const chartRef = useRef(null);
 
   useEffect(() => {
     const ctx = document.getElementById("chartPie").getContext("2d");
 
-    // If a chart instance already exists, destroy it before creating a new one
     if (chartRef.current) {
       chartRef.current.destroy();
     }
@@ -18,12 +17,7 @@ export const Aircompose = () => {
         {
           label: "Air Composition",
           data: [78, 21, 0.93, 0.04],
-          backgroundColor: [
-            "rgb(133, 105, 241)",
-            "rgb(164, 101, 241)",
-            "rgb(101, 143, 241)",
-            "rgb(241, 233, 101)",
-          ],
+          backgroundColor: ["rgb(133, 105, 241)", "rgb(164, 101, 241)", "rgb(101, 143, 241)", "rgb(241, 233, 101)"],
           hoverOffset: 4,
         },
       ],
@@ -33,6 +27,8 @@ export const Aircompose = () => {
       type: "pie",
       data: dataPie,
       options: {
+        responsive: true, 
+        maintainAspectRatio: false, 
         plugins: {
           legend: {
             position: "bottom",
@@ -41,10 +37,8 @@ export const Aircompose = () => {
       },
     };
 
-    // Create a new chart instance and save it to the ref
     chartRef.current = new Chart(ctx, configPie);
 
-    // Cleanup function to destroy the chart when the component unmounts
     return () => {
       if (chartRef.current) {
         chartRef.current.destroy();
@@ -53,9 +47,11 @@ export const Aircompose = () => {
   }, []);
 
   return (
-    <div className="shadow-lg rounded-lg overflow-hidden">
-      <div className="py-3 px-5 bg-green-100 text-center">Air Composition</div>
-      <canvas className="p-1 ml-40 mr-40" id="chartPie"></canvas>
+    <div className="shadow-lg rounded-lg overflow-hidden w-full max-w-[500px] mx-auto">
+      <div className="py-3 px-5 bg-green-100 text-center text-lg font-semibold">Air Composition</div>
+      <div className="p-4">
+        <canvas id="chartPie"></canvas>
+      </div>
     </div>
   );
 };

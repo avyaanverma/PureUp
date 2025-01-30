@@ -31,44 +31,36 @@ const Dashboard = () => {
       </header>
 
       <main className="flex-grow flex">
-        {isSidebarOpen && <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />}
-        <div className="container mx-auto p-6 flex flex-col items-center w-full">
+        {isSidebarOpen && (
+          <Sidebar
+            isOpen={isSidebarOpen}
+            toggleSidebar={toggleSidebar}
+            className="hidden md:block"
+          />
+        )}
+
+        <div className="container mx-auto p-4 sm:p-6 flex flex-col items-center w-full">
           {/* Nearby Nurseries, AQI Status, and Air Composition */}
-          <section className="mb-6 w-full max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-start">
-            {/* Nearby Nurseries */}
+          <section className="mb-6 w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="col-span-1">
               <NearbyNurseries />
             </div>
-
-            {/* AQI Status and Air Composition */}
-            <div className="col-span-2 flex flex-col">
-              <div className="mb-4">
-                <Aqistatus />
-              </div>
-              <div className="self-end w-full max-w-sm">
-                <Aircompose />
-              </div>
+            <div className="col-span-2 flex flex-col gap-4">
+              <Aqistatus />
+              <Aircompose />
             </div>
           </section>
 
           {/* PlantWiki and Plant of the Day */}
-          <section className="mb-6 w-full max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-start">
-            <div className="flex-1 md:flex-none">
-              <PlantWiki />
-            </div>
-            <div className="flex-1 md:flex-none ml-auto">
-              <Plant />
-            </div>
+          <section className="mb-6 w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+            <PlantWiki />
+            <Plant />
           </section>
 
           {/* Buy Soil and Soil Checker */}
-          <section className="mb-6 w-full max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-start">
-            <div className="flex-1 md:flex-none">
-              <BuySoil />
-            </div>
-            <div className="flex-1 md:flex-none ml-auto">
-              <Checker />
-            </div>
+          <section className="mb-6 w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+            <BuySoil />
+            <Checker />
           </section>
         </div>
       </main>

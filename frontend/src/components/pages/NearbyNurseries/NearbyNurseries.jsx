@@ -29,7 +29,6 @@ export const NearbyNurseries = () => {
               src={nursery.imageUrl}
               alt={nursery.name}
               className="w-full h-48 object-cover transform transition-transform duration-300 group-hover:scale-105"
-            
             />
             <div className="p-4">
               <h3 className="text-lg font-semibold text-center">{nursery.name}</h3>
