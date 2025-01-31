@@ -11,6 +11,8 @@ export const Aircompose = () => {
       chartRef.current.destroy();
     }
 
+    const isDarkMode = document.documentElement.classList.contains("dark");
+
     const dataPie = {
       labels: ["Nitrogen (N₂)", "Oxygen (O₂)", "Argon (Ar)", "Carbon Dioxide (CO₂)"],
       datasets: [
@@ -32,6 +34,9 @@ export const Aircompose = () => {
         plugins: {
           legend: {
             position: "bottom",
+            labels: {
+              color: isDarkMode ? "#ffffff" : "#000000", // Legend text adapts to dark mode
+            },
           },
         },
       },
@@ -47,8 +52,10 @@ export const Aircompose = () => {
   }, []);
 
   return (
-    <div className="shadow-lg rounded-lg overflow-hidden w-full max-w-[500px] mx-auto">
-      <div className="py-3 px-5 bg-green-100 text-center text-lg font-semibold">Air Composition</div>
+    <div className="shadow-lg rounded-lg overflow-hidden w-full max-w-[500px] mx-auto bg-white dark:bg-gray-800">
+      <div className="py-3 px-5 bg-green-100 dark:bg-green-900 text-center text-lg font-semibold text-gray-900 dark:text-white">
+        Air Composition
+      </div>
       <div className="p-4">
         <canvas id="chartPie"></canvas>
       </div>
