@@ -11,6 +11,7 @@ const FarmerSection = () => {
     useEffect(() => {
         const fetchFarmers = async () => {
             const data = await getAllFarmers();
+            console.log("Fetched Farmers:", data); // Debugging fetched data
             setFarmers(data);
         };
         fetchFarmers();
@@ -18,36 +19,43 @@ const FarmerSection = () => {
 
     return (
         <section className="relative w-full h-[500px]">
-                            <button 
-                                className="absolute left-5 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-4 py-2 rounded-md shadow-md z-10"
-                                onClick={() => swiperRef.current?.slidePrev()}
-                            >
-                                ❮ Prev
-                            </button>
-                            <button 
-                                className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-4 py-2 rounded-md shadow-md z-10"
-                                onClick={() => swiperRef.current?.slideNext()}
-                            >
-                                Next ❯
-                            </button>
+            {/* Navigation Buttons */}
+            {farmers.length > 1 && (
+                <>
+                    <button
+                        className="absolute left-5 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-4 py-2 rounded-md shadow-md z-10"
+                        onClick={() => swiperRef.current?.slidePrev()}
+                    >
+                        ❮ Prev
+                    </button>
+                    <button
+                        className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-4 py-2 rounded-md shadow-md z-10"
+                        onClick={() => swiperRef.current?.slideNext()}
+                    >
+                        Next ❯
+                    </button>
+                </>
+            )}
+
             <Swiper
                 modules={[Autoplay]}
                 autoplay={{ delay: 3000, disableOnInteraction: false }}
-                loop={true}
+                loop={farmers.length > 1} // Enable loop only if more than 1 farmer
                 slidesPerView={1}
                 slidesPerGroup={1}
                 className="w-full h-full"
                 onSwiper={(swiper) => (swiperRef.current = swiper)} // Store swiper instance
             >
-                {farmers.map((farmer, index) => (
-                    <SwiperSlide key={index} className="relative w-full h-fullj">
+                {/* Duplicate slides to ensure looping works */}
+                {[...farmers, ...farmers].map((farmer, index) => (
+                    <SwiperSlide key={index} className="relative w-full h-full">
                         <div
                             className="absolute inset-0"
                             style={{
                                 backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${farmer.image})`,
                                 backgroundSize: "cover",
                                 backgroundPosition: "center",
-                                backgroundRepeat: "no-repeat"
+                                backgroundRepeat: "no-repeat",
                             }}
                         />
                         <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-6">
@@ -57,8 +65,6 @@ const FarmerSection = () => {
                     </SwiperSlide>
                 ))}
             </Swiper>
-
-            {/* Navigation Buttons */}
         </section>
     );
 };

@@ -18,7 +18,7 @@ const Home = () => {
                     <h1 className="thought text-6xl max-w-3xl font-poppins">Make a Beautiful Garden With Your Own Hand</h1>
                     <p className="text-sm max-w-md">Find your Dream plant for your home decoration and purification and we will make it happen.</p>
                     
-                    <button type="button" className="text-white-900 bg-[#212121] border border-gray-300 focus:outline-none hover:bg-green-100 hover:text-gray-600 focus:ring-4 focus:ring-gray-100 font-medium rounded-md text-sm px-5 py-2.5 me-2 mb-2 ">Explore Now</button>
+                    <button type="button" className="text-white-900 bg-[#212121] border border-gray-300 focus:outline-none hover:bg-green-100 hover:text-gray-600 focus:ring-4 focus:ring-gray-100 font-medium rounded-md text-sm px-5 py-2.5 me-2 mb-2 "><a href="/user">Explore Now</a></button>
 
                 </div>
                 {/* Plant of the day and Thought of the day  */}
