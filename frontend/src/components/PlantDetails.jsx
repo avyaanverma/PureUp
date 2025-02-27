@@ -25,7 +25,7 @@ const PlantDetails = () => {
                         <h2 className="font-poppins font-semibold">{plant.name}</h2>
                         <p className="text-xs font-light">{plant.description}</p>
                         <p className="text-xs font-medium">₹{plant.price}</p>
-                        <button type="button" className="text-white-900 hover:bg-[#212121] border border-gray-300 focus:outline-none bg-green-100 text-gray-600 focus:ring-4 focus:ring-gray-100 font-medium rounded-md text-xs   w-20 h-8 ">Add to Cart</button>
+                        <button type="button" className="text-gray-900 hover:text-white hover:bg-[#212121] border border-gray-300 focus:outline-none bg-green-100  focus:ring-4 focus:ring-gray-100 font-medium rounded-md text-xs   w-20 h-8 ">Add to Cart</button>
 
                     </div>
                 </div>

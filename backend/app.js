@@ -3,10 +3,11 @@ const axios = require('axios');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose')
 require('dotenv').config();
-const plantRoutes = require('./routes/plantRoutes')
 const app = express();
 const PORT = 8000;
 const cors = require("cors");
+const plantRoutes = require('./routes/plantRoutes')
+const farmerRoutes = require("./routes/farmerRoutes")
 
 
 app.use(bodyParser.json());
@@ -29,6 +30,7 @@ const connectDB = async () => {
 connectDB();
 
 app.use('/api', plantRoutes); // All routes will start with /api
+app.use("/api/farmers", farmerRoutes);
 
 app.get('/', async(req,res)=>{
     let mssge = {

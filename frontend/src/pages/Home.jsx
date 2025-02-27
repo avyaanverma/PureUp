@@ -4,7 +4,7 @@ import PlantList from "../components/PlantList";
 import { ShopContext } from "../context/ShopContext";
 import { getAllPlants } from "../services/api";
 import PlantDetails from "../components/PlantDetails";
-
+import FarmerSection from "../components/FarmerSection";
 const Home = () => {
     const {products} = useContext(ShopContext);
     
@@ -29,6 +29,9 @@ const Home = () => {
                 <PlantDetails/>
             </section>
 
+            <section>
+                <FarmerSection/>
+            </section>
         </div>
     );
 };

@@ -21,3 +21,13 @@ export const getPlantById = async (id) => {
 };
 
 
+// ✅ Fetch all farmers
+export const getAllFarmers = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/farmers`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching farmers:", error);
+        return [];
+    }
+};
