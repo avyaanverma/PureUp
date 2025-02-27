@@ -8,7 +8,7 @@ const PORT = 8000;
 const cors = require("cors");
 const plantRoutes = require('./routes/plantRoutes')
 const farmerRoutes = require("./routes/farmerRoutes")
-
+const productRoutes = require("./routes/productRoutes")
 
 app.use(bodyParser.json());
 const MONGO_URI = process.env.MONGO_URI;
@@ -31,6 +31,8 @@ connectDB();
 
 app.use('/api', plantRoutes); // All routes will start with /api
 app.use("/api/farmers", farmerRoutes);
+app.use('/api/products', productRoutes);
+
 
 app.get('/', async(req,res)=>{
     let mssge = {

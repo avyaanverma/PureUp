@@ -5,8 +5,10 @@ import { ShopContext } from "../context/ShopContext";
 import { getAllPlants } from "../services/api";
 import PlantDetails from "../components/PlantDetails";
 import FarmerSection from "../components/FarmerSection";
+import ProductList from "../components/ProductList";
+
+
 const Home = () => {
-    const {products} = useContext(ShopContext);
     
     return (
         <div>
@@ -31,6 +33,12 @@ const Home = () => {
 
             <section>
                 <FarmerSection/>
+            </section>
+
+            <section>
+            <section className="plants-for-sale text-white bg-[#212121] p-8 px-28">
+                <ProductList />
+            </section>
             </section>
         </div>
     );
