@@ -31,7 +31,9 @@ const Dashboard = () => {
       </header>
 
       <main className="flex-grow flex">
-        {isSidebarOpen && <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />}
+        {/* {isSidebarOpen && (
+          <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+        )} */}
         <div className="container mx-auto p-6 flex flex-col items-center w-full">
           {/* Nearby Nurseries, AQI Status, and Air Composition */}
           <section className="mb-6 w-full max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-start">
@@ -42,7 +44,7 @@ const Dashboard = () => {
 
             {/* AQI Status and Air Composition */}
             <div className="col-span-2 flex flex-col">
-              <div className="mb-4">
+              <div className="mb-4 mt-16">
                 <Aqistatus />
               </div>
               <div className="self-end w-full max-w-sm">
