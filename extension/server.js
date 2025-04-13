@@ -63,8 +63,11 @@ app.post('/api/plant-details', async (req, res) => {
 // --- Start Server ---
 async function startServer() {
     await connectDb(); // Connect to DB before starting listener
-    app.listen(port, () => {
-        console.log(`Backend server listening on http://localhost:${port}`);
+    // Use port provided by environment (Render) or default to 3001 for local dev
+    const PORT = process.env.PORT || 3001;
+    // Listen on 0.0.0.0 to accept connections from Render's proxy
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Backend server listening on port ${PORT}`);
     });
 }
 
