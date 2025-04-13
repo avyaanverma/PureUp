@@ -1,27 +1,54 @@
 import React from 'react';
 
-export const Plant = () => {
-  return (
-    <div
-      className="w-[400px] h-[350px] flex flex-col rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 md:max-w-xl md:flex-row">
-      
-      <div className="flex flex-col justify-start p-6">
-        <h5
-          className="mb-2 text-xl font-medium text-neutral-800 dark:text-neutral-50">
-          Plant Of The Day: Aloe Vera
-        </h5>
-        <p className="mb-4 text-base text-neutral-600 dark:text-neutral-200">
-          Aloe Vera is a versatile plant known for its soothing and healing properties. It is widely used in skincare, medicinal treatments, and as a natural remedy for various ailments. Easy to grow and maintain.
-        </p>
-        <p className="text-xs text-neutral-500 dark:text-neutral-300">
-          Last updated 3 mins ago
-        </p>
-      </div>
+const plants = [
+  {
+    name: "Aloe Vera",
+    image: "https://dukaan.b-cdn.net/700x700/webp/media/8c16c85b-26c5-49fd-bac6-3a2add3f0fc5.png",
+    description: "Aloe Vera is a versatile plant known for its soothing and healing properties.",
+  },
+  {
+    name: "Snake Plant",
+    image: "https://www.mydomaine.com/thmb/lNxKuWZtIN2j6YOH-_wxLDvmyTs=/2230x2886/filters:no_upscale():max_bytes(150000):strip_icc()/the-sill_sansevieria-zeylanica-snake-plant_6_2230x.progressive-5e010d6edf454e3c913be21b19942306.jpg",
+    description: "Snake plants are known for improving indoor air quality and are low-maintenance.",
+  },
+  {
+    name: "Peace Lily",
+    image: "https://www.mydomaine.com/thmb/9aB79USSkhiCVgGyXh1TBSvM7v8=/900x900/filters:fill(auto,1)/1566417254329_20190821-1566417255317-b9314f1d9f7a4668a466c5ffb1913a8f.jpg",
+    description: "Peace Lilies thrive indoors and bloom elegant white flowers.",
+  },
+  {
+    name: "Spider Plant",
+    image: "https://nestreeo.com/wp-content/uploads/2020/05/spider-plant-2-scaled.jpg",
+    description: "Spider plants are easy to care for and produce small plantlets.",
+  },
+  {
+    name: "Money Plant",
+    image: "https://cdn.shopify.com/s/files/1/0663/9613/articles/Money_plant.webp?v=1679918387",
+    description: "Money plants are considered to bring good luck and purify the air.",
+  },
+];
 
-      <img
-        className="h-96 w-full rounded-t-lg object-cover md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
-        src="https://dukaan.b-cdn.net/700x700/webp/media/8c16c85b-26c5-49fd-bac6-3a2add3f0fc5.png"
-        alt="Aloe Vera" />
+export const Plant = () => {
+  const randomPlant = plants[Math.floor(Math.random() * plants.length)];
+
+  return (
+    <div className="w-full h-full bg-white rounded-lg shadow p-4 flex flex-col md:flex-row">
+      <div className="md:w-1/3">
+        <img
+          className="w-full h-48 md:h-full object-cover rounded-lg"
+          src={randomPlant.image}
+          alt={randomPlant.name}
+        />
+      </div>
+      <div className="md:w-2/3 p-4">
+        <h5 className="text-xl font-medium text-neutral-800 mb-2">
+          Plant Of The Day: {randomPlant.name}
+        </h5>
+        <p className="text-neutral-600 mb-4">
+          {randomPlant.description}
+        </p>
+        <p className="text-xs text-neutral-500">Refreshed just now</p>
+      </div>
     </div>
   );
 };
