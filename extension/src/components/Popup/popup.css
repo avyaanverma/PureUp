@@ -223,7 +223,8 @@ body {
 
 .plant-image-large {
   height: 100px; /* Adjust size */
-  width: auto;
+  width: 100px; /* Added fixed width for testing */
+  object-fit: cover; /* Added to prevent distortion */
   flex-shrink: 0; /* Prevent image from shrinking */
 }
 
@@ -361,7 +362,8 @@ body {
 
 .modal-plant-image {
   max-height: 120px; /* Adjust size */
-  width: auto;
+  width: 120px; /* Added fixed width for testing */
+  object-fit: cover; /* Added to prevent distortion */
   display: block;
   margin: 0 auto 15px auto;
 }

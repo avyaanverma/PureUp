@@ -2,19 +2,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './popup.css';
 
-// Placeholder data for modals
-const plantDetails = {
-  plantOfDay: {
-    title: 'Plant of the day',
-    name: 'Cactus',
-    image: '/images/plantofDay.png',
-    description: 'A low-maintenance plant that can tolerate drought and adapt to various environments.',
-    details: {
-      light: 'Bright, direct sunlight (6+ hours)',
-      water: 'Water sparingly, allow soil to dry completely',
-      humidity: 'Low humidity preferred',
-      temperature: '70-80°F (21-27°C) during summer, cooler in winter',
-    }
+// Default structure for Plant of the Day (loading state)
+const defaultPlantOfDay = {
+  _id: 'plantOfDay', // Use a fixed ID for state management/modal logic
+  title: 'Plant of the day',
+  name: 'Loading...',
+  image: '/images/plantofDay.png', // Keep a default image while loading
+  description: 'Fetching today\'s plant...',
+  details: {
+      light: 'N/A',
+      water: 'N/A',
+      humidity: 'N/A',
+      temperature: 'N/A',
   }
 };
 
@@ -46,6 +45,26 @@ const defaultSuggestedPlants = [
   },
 ];
 
+// Helper function to generate the local image path (used for both PotD and suggestions)
+const getLocalImagePath = (plantName) => {
+  if (!plantName || plantName === 'Loading...' || plantName === 'Error') {
+      // Return default image if name is invalid or loading/error state
+      // Use a generic one for suggestions, specific one for PotD card initial load
+      return plantName === 'Loading...' && plantName === defaultPlantOfDay.name
+             ? '/images/plantofDay.png'
+             : '/images/suggested-plant.png';
+  }
+
+  // Handle special cases first
+  if (plantName === 'Tulsi') return '/images/plants/Tulsi.png';
+  if (plantName === 'Pothos') return '/images/plants/Pothos.png';
+
+  // Default conversion: lowercase, replace spaces with underscores
+  const filename = plantName.toLowerCase().replace(/\s+/g, '_') + '.png';
+  return `/images/plants/${filename}`;
+};
+
+
 const Popup = () => {
   const [modalPlantId, setModalPlantId] = useState(null);
   const [dynamicSuggestedPlants, setDynamicSuggestedPlants] = useState(defaultSuggestedPlants);
@@ -55,6 +74,7 @@ const Popup = () => {
   const [locationError, setLocationError] = useState(null);
   const [locationName, setLocationName] = useState('Getting location...'); // For display
   const [aqi, setAqi] = useState({ value: null, level: null, loading: true });
+  const [plantOfDay, setPlantOfDay] = useState(defaultPlantOfDay); // State for Plant of the Day
 
   const settingsRef = useRef(null);
   const settingsBtnRef = useRef(null);
@@ -63,7 +83,13 @@ const Popup = () => {
   const WAQI_API_KEY = 'fecadddfdc3b77b717a2465085c2316e403d5c99'; // WAQI API Key
   const OWM_API_KEY = "a00174d020ab1cec2d561cbffadd4c96"; // OpenWeatherMap API Key
   const ML_API_URL = "https://fastapi-voting-based-model-api-for-plant.onrender.com/predict";
-  const BACKEND_API_URL = 'http://localhost:3001/api/plant-details'; // Backend server URL
+  // Use different URLs for development and production builds
+  const BACKEND_BASE_URL = process.env.NODE_ENV === 'production'
+    ? 'https://my-plamt-api.onrender.com' // Use the actual deployed Render URL (Base)
+    : 'http://localhost:3001'; // Development URL (Base)
+  const PLANT_DETAILS_API_URL = `${BACKEND_BASE_URL}/api/plant-details`;
+  const RANDOM_PLANT_API_URL = `${BACKEND_BASE_URL}/api/random-plant`;
+
 
   // --- Helper Functions ---
   const getAqiColor = (level) => {
@@ -98,9 +124,8 @@ const Popup = () => {
   // --- Data Fetching Functions ---
 
   const getAQI = async (latitude, longitude) => {
-    setAqi({ ...aqi, loading: true }); // Use spread for previous state
-    // Check AQI Cache first (simplified example, assuming similar logic as suggestions)
-    // ... cache check logic ...
+    setAqi({ ...aqi, loading: true });
+    // Add caching logic here if desired for AQI
     try {
       const response = await fetch(`https://api.waqi.info/feed/geo:${latitude};${longitude}/?token=${WAQI_API_KEY}`);
       if (!response.ok) throw new Error(`WAQI API error: ${response.status}`);
@@ -125,15 +150,14 @@ const Popup = () => {
       }
     } catch (error) {
       console.error('Error getting AQI:', error);
-      setAqi({ value: null, level: null, loading: false }); // Ensure loading stops on error
+      setAqi({ value: null, level: null, loading: false });
     }
   };
 
   const getLocationName = async (latitude, longitude) => {
     console.log("Attempting to fetch location name for display...");
     setLocationError(null);
-    // Check Location Name Cache first
-    // ... cache check logic ...
+    // Add caching logic here if desired for location name
     try {
       const url = `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${OWM_API_KEY}`;
       const response = await fetch(url);
@@ -224,8 +248,8 @@ const Popup = () => {
     let plantNamesToFetch = [];
 
     try {
-      // Step 1 & 2: Get Air Pollution Data & Process (Keep this part)
-      console.log(`Fetching air pollution data for ${latitude}, ${longitude}...`);
+      // Step 1 & 2: Get Air Pollution Data & Process
+      // ... (Air pollution fetch and processing logic remains the same) ...
       const airUrl = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${latitude}&lon=${longitude}&appid=${OWM_API_KEY}`;
       const airResponse = await fetch(airUrl);
       if (!airResponse.ok) throw new Error(`Air Pollution API error: ${airResponse.status}`);
@@ -246,6 +270,7 @@ const Popup = () => {
       const xylene = getRandomFloat(1.0, 10.0);
       const aqiValue = calculateIndiaAqi(pm2_5, pm10);
       const airQualityData = { "PM2_5": pm2_5, "PM10": pm10, "NO": no, "NO2": no2, "NOx": nox, "NH3": nh3, "CO": co, "SO2": so2, "O3": o3, "Benzene": benzene, "Toluene": toluene, "Xylene": xylene, "AQI": aqiValue };
+
 
       // Step 3: Call ML API
       console.log("Sending data to ML prediction API...");
@@ -269,7 +294,7 @@ const Popup = () => {
 
       // Step 5: Fetch Full Details from Backend Server
       console.log("Fetching details for plants from backend:", plantNamesToFetch);
-      const backendResponse = await fetch(BACKEND_API_URL, {
+      const backendResponse = await fetch(PLANT_DETAILS_API_URL, { // Use constant
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plantNames: plantNamesToFetch })
@@ -281,15 +306,18 @@ const Popup = () => {
       const detailedPlantsData = await backendResponse.json(); // Array of full plant objects from DB
       console.log("Received detailed plant data from backend:", detailedPlantsData);
 
-      // Step 6: Map DB data to Frontend State Structure
+      // Step 6: Map DB data to Frontend State Structure, constructing local image paths
       const detailedSuggestions = plantNamesToFetch.map((name, index) => {
         const details = detailedPlantsData.find(p => p.plant_name === name);
+
         if (details) {
+          const imagePath = getLocalImagePath(details.plant_name);
+          // console.log(`Constructed image path for ${details.plant_name}: ${imagePath}`);
           return {
             id: `suggestion-${index + 1}`,
             title: 'Our Suggestion',
             name: details.plant_name,
-            image: details.image_location || '/images/suggested-plant.png', // Use image_location
+            image: imagePath, // Use the constructed local path
             description: details.description || 'Details not available.',
             details: {
               light: details.light_requirement || 'N/A',
@@ -299,13 +327,14 @@ const Popup = () => {
             }
           };
         } else {
-          // Fallback if a plant name from ML wasn't found in DB
+          const imagePath = getLocalImagePath(name);
+          // console.log(`Constructed fallback image path for ${name}: ${imagePath}`);
           return {
-            ...defaultSuggestedPlants[index], // Use default structure
+            ...defaultSuggestedPlants[index],
              id: `suggestion-${index + 1}`,
-             name: name, // Keep the name from ML
+             name: name,
              description: 'Details not found in database.',
-             image: '/images/suggested-plant.png', // Default image
+             image: imagePath,
              details: { light: 'N/A', water: 'N/A', humidity: 'N/A', temperature: 'N/A' }
            };
         }
@@ -317,14 +346,17 @@ const Popup = () => {
               ...defaultSuggestedPlants[detailedSuggestions.length],
               id: `suggestion-${detailedSuggestions.length + 1}`,
               name: 'More Options',
-              description: 'Explore other plants.'
+              description: 'Explore other plants.',
+              image: '/images/suggested-plant.png', // Default image for padding
+              details: { light: 'N/A', water: 'N/A', humidity: 'N/A', temperature: 'N/A' }
            });
       }
       const finalDetailedSuggestions = detailedSuggestions.slice(0, 3);
 
       // Step 7: Update State and Cache
-      console.log("Setting dynamic suggested plants with detailed data:", finalDetailedSuggestions);
+      console.log("Setting dynamic suggested plants with detailed data (local paths):", finalDetailedSuggestions);
       setDynamicSuggestedPlants(finalDetailedSuggestions);
+      // Caching the data with local paths is fine.
       try {
         chrome.storage.local.set({
           [cacheKey]: finalDetailedSuggestions, // Cache the detailed data
@@ -341,17 +373,13 @@ const Popup = () => {
       }
 
     } catch (error) {
-      // Catch errors from any step in the process
       console.error('Error in fetchAndProcessSuggestions flow:', error);
-      // Provide more specific feedback if possible
       let errorDescription = `Failed to get suggestions: ${error.message}`;
       if (error.message.includes("Backend API error")) {
           errorDescription = "Could not connect to the detail server. Please ensure it's running.";
       } else if (error.message.includes("ML API")) {
           errorDescription = "Could not get recommendations from the prediction service.";
       }
-
-      // Fallback: Show names from ML model if available, otherwise generic error
       if (plantNamesToFetch.length > 0) {
           const fallbackSuggestions = plantNamesToFetch.map((name, index) => ({
              ...defaultSuggestedPlants[index],
@@ -364,10 +392,45 @@ const Popup = () => {
           }
           setDynamicSuggestedPlants(fallbackSuggestions.slice(0, 3));
       } else {
-          // Generic error if ML names weren't even available
           setDynamicSuggestedPlants(defaultSuggestedPlants.map(p => ({ ...p, name: "Error", description: errorDescription })));
       }
-      // Do not cache error states
+    }
+  };
+
+  // Fetches the random plant of the day
+  const fetchPlantOfDay = async () => {
+    console.log("Fetching Plant of the Day...");
+    try {
+      const response = await fetch(RANDOM_PLANT_API_URL); // Use constant
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Random plant API error: ${response.status} - ${errorText}`);
+      }
+      const data = await response.json();
+      const imagePath = getLocalImagePath(data.plant_name);
+      console.log(`Fetched Plant of the Day: ${data.plant_name}, Image path: ${imagePath}`);
+
+      setPlantOfDay({
+        _id: 'plantOfDay', // Keep fixed ID
+        title: 'Plant of the day',
+        name: data.plant_name || 'Unknown Plant',
+        image: imagePath,
+        description: data.description || 'No description available.',
+        details: {
+          light: data.light_requirement || 'N/A',
+          water: data.watering_frequency || 'N/A',
+          humidity: data.humidity || 'N/A',
+          temperature: data.temperature_range || 'N/A'
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching Plant of the Day:', error);
+      // Keep default loading state or set an error state
+      setPlantOfDay({
+        ...defaultPlantOfDay,
+        name: "Error",
+        description: "Could not fetch Plant of the Day."
+      });
     }
   };
 
@@ -394,6 +457,9 @@ const Popup = () => {
     const CACHE_DURATION_LOCATION = 60 * 60 * 1000; // 1 hour for location name cache
 
     const loadData = () => {
+      // Fetch Plant of the Day on initial load
+      fetchPlantOfDay();
+
       if (!("geolocation" in navigator)) {
         handleLocationError(new Error("Geolocation is not supported"));
         return;
@@ -407,8 +473,7 @@ const Popup = () => {
           setLocation({ latitude, longitude });
           setLocationError(null);
 
-          // Fetch core data using coordinates (AQI and Suggestions)
-          // These functions handle their own caching internally
+          // Fetch location-based data (AQI and Suggestions)
           getPlantSuggestions(latitude, longitude);
           getAQI(latitude, longitude);
 
@@ -480,13 +545,18 @@ const Popup = () => {
   // Find the data for the currently open modal
   const currentModalData = modalPlantId
     ? modalPlantId === 'plantOfDay'
-      ? plantDetails.plantOfDay // Static data for plant of the day
+      ? { ...plantOfDay, title: 'Plant of the day' } // Use fetched plantOfDay state
       : dynamicSuggestedPlants.find(p => p.id === modalPlantId) // Find suggestion by ID
     : null;
 
   // Determine the currently displayed suggestion in the carousel
   const safeSuggestionIndex = dynamicSuggestedPlants.length > 0 ? currentSuggestionIndex % dynamicSuggestedPlants.length : 0;
   const currentSuggestion = dynamicSuggestedPlants.length > 0 ? dynamicSuggestedPlants[safeSuggestionIndex] : defaultSuggestedPlants[0]; // Fallback to default loading state
+
+  // Log the state just before rendering to check image URLs
+  // console.log("Rendering dynamicSuggestedPlants state:", JSON.stringify(dynamicSuggestedPlants, null, 2));
+  // console.log("Rendering plantOfDay state:", JSON.stringify(plantOfDay, null, 2));
+
 
   return (
     <div className={`popup-container ${modalPlantId ? 'modal-active' : ''}`}>
@@ -527,7 +597,8 @@ const Popup = () => {
              <span className="title-part-2">of the</span>
              <span className="title-part-3">day</span>
            </h2>
-           <img src="/images/plantofDay.png" alt="Cactus" className="plant-image-small" />
+           {/* Use dynamic image from plantOfDay state */}
+           <img src={plantOfDay.image} alt={plantOfDay.name} className="plant-image-small" />
         </section>
       </main>
 

@@ -7,8 +7,10 @@ const port = 3001; // Use a different port than the React app (usually 3000)
 
 // --- Configuration ---
 const mongoUri = "mongodb+srv://Aksh20:Aksh20@cluster0.hget4ip.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const dbName = 'plants';
-const collectionName = 'plants_info';
+const plantsDbName = 'plants'; // Renamed for clarity
+const plantsCollectionName = 'plants_info';
+const particlesDbName = 'particles'; // New DB name
+const aqiInfoCollectionName = 'aqi_info'; // New collection name
 
 // --- Middleware ---
 app.use(cors()); // Allow requests from any origin (adjust for production later if needed)
@@ -16,23 +18,25 @@ app.use(express.json()); // Parse JSON request bodies
 
 // --- MongoDB Client ---
 const client = new MongoClient(mongoUri);
-let db;
+let plantsDb; // Reference for the 'plants' database
+let particlesDb; // Reference for the 'particles' database
 
 async function connectDb() {
     try {
         await client.connect();
-        db = client.db(dbName);
-        console.log(`Connected successfully to MongoDB database: ${dbName}`);
+        plantsDb = client.db(plantsDbName);
+        particlesDb = client.db(particlesDbName); // Connect to the new DB as well
+        console.log(`Connected successfully to MongoDB databases: ${plantsDbName}, ${particlesDbName}`);
     } catch (err) {
         console.error("Failed to connect to MongoDB:", err);
         process.exit(1); // Exit if DB connection fails
     }
 }
 
-// --- API Endpoint ---
+// --- API Endpoint for Plant Details ---
 app.post('/api/plant-details', async (req, res) => {
-    if (!db) {
-        return res.status(503).json({ error: "Database not connected" });
+    if (!plantsDb) { // Check specific DB connection
+        return res.status(503).json({ error: "Plants database not connected" });
     }
 
     const plantNames = req.body.plantNames; // Expecting an array of names: ["Aloe Vera", "Snake Plant"]
@@ -44,7 +48,7 @@ app.post('/api/plant-details', async (req, res) => {
     console.log("Received request for plant details:", plantNames);
 
     try {
-        const collection = db.collection(collectionName);
+        const collection = plantsDb.collection(plantsCollectionName); // Use correct DB and collection
         // Find documents where 'plant_name' is in the provided array
         const plantDetails = await collection.find({ plant_name: { $in: plantNames } }).toArray();
 
@@ -62,14 +66,14 @@ app.post('/api/plant-details', async (req, res) => {
 
 // --- API Endpoint for Random Plant ---
 app.get('/api/random-plant', async (req, res) => {
-    if (!db) {
-        return res.status(503).json({ error: "Database not connected" });
+    if (!plantsDb) { // Check specific DB connection
+        return res.status(503).json({ error: "Plants database not connected" });
     }
 
     console.log("Received request for random plant details");
 
     try {
-        const collection = db.collection(collectionName);
+        const collection = plantsDb.collection(plantsCollectionName); // Use correct DB and collection
         // Use aggregation pipeline with $sample to get 1 random document
         const randomPlant = await collection.aggregate([{ $sample: { size: 1 } }]).toArray();
 
@@ -83,6 +87,41 @@ app.get('/api/random-plant', async (req, res) => {
     } catch (err) {
         console.error("Error fetching random plant details from MongoDB:", err);
         res.status(500).json({ error: "Failed to fetch random plant details" });
+    }
+});
+
+// --- API Endpoint for Logging AQI Data ---
+app.post('/api/log-aqi', async (req, res) => {
+    if (!particlesDb) { // Check particles DB connection
+        return res.status(503).json({ error: "Particles database not connected" });
+    }
+
+    const { latitude, longitude, cityName, aqiData } = req.body;
+
+    if (latitude == null || longitude == null || !cityName || !aqiData) {
+        return res.status(400).json({ error: "Missing required fields (latitude, longitude, cityName, aqiData)" });
+    }
+
+    console.log(`Received request to log AQI for city: ${cityName}`);
+
+    try {
+        const collection = particlesDb.collection(aqiInfoCollectionName); // Use new DB and collection
+
+        const logEntry = {
+            cityName,
+            latitude,
+            longitude,
+            aqiData, // Store the entire object received from frontend
+            timestamp: new Date() // Add a timestamp
+        };
+
+        const result = await collection.insertOne(logEntry);
+        console.log(`AQI data logged successfully for ${cityName} with ID: ${result.insertedId}`);
+        res.status(201).json({ message: "AQI data logged successfully", id: result.insertedId });
+
+    } catch (err) {
+        console.error(`Error logging AQI data for ${cityName}:`, err);
+        res.status(500).json({ error: "Failed to log AQI data" });
     }
 });
 
