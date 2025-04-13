@@ -10,14 +10,14 @@ import { BuySoil } from "../pages/BuySoil/BuySoil";
 
 const Dashboard = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50 ">
       {/* Header - Removed sidebar toggle button */}
-      <header className="sticky top-0 z-10 flex-shrink-0 p-4 bg-gray-800 shadow-md">
+      <header className="sticky top-0 z-10 flex-shrink-0 bg-gray-800 shadow-md">
         <Navbar />
       </header>
 
       {/* Main Content - Removed sidebar references */}
-      <main className="flex-grow">
+      <main className="flex-grow p-10">
         <div className="p-4 lg:p-6 space-y-6">
           {/* Top Row */}
           <div className="flex flex-col lg:flex-row gap-6">
@@ -25,7 +25,7 @@ const Dashboard = () => {
             <div className="lg:w-1/2">
               <NearbyNurseries />
             </div>
-            
+
             {/* Air Quality Cards */}
             <div className="lg:w-1/2 grid grid-cols-2 gap-6">
               <div className="bg-white rounded-lg shadow p-4 aspect-square">

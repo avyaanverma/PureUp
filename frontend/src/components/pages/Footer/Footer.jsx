@@ -3,7 +3,7 @@ import minilogo from "../../../assets/logomini.png";
 
 export const Footer = () => {
   return (
-    <footer className="bg-white dark:bg-green-900">
+    <footer className="bg-[#2C3930] dark:bg-[#2C3930]">
       <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
