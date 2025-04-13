@@ -112,15 +112,40 @@ app.post('/api/log-aqi', async (req, res) => {
             latitude,
             longitude,
             aqiData, // Store the entire object received from frontend
-            timestamp: new Date() // Add a timestamp
+            timestamp: new Date() // Add/update a timestamp
         };
 
-        const result = await collection.insertOne(logEntry);
-        console.log(`AQI data logged successfully for ${cityName} with ID: ${result.insertedId}`);
-        res.status(201).json({ message: "AQI data logged successfully", id: result.insertedId });
+        // Define the filter to find a document with the same coordinates
+        const filter = { latitude: latitude, longitude: longitude };
+
+        // Define the update operation using $set to replace fields
+        const updateDoc = {
+            $set: {
+                cityName: cityName, // Update city name in case it changes for coords
+                aqiData: aqiData,
+                timestamp: logEntry.timestamp // Use the timestamp from the logEntry object
+            }
+        };
+
+        // Set options for updateOne: upsert = true means insert if not found
+        const options = { upsert: true };
+
+        // Perform the upsert operation
+        const result = await collection.updateOne(filter, updateDoc, options);
+
+        if (result.upsertedCount > 0) {
+            console.log(`AQI data inserted for ${cityName} with ID: ${result.upsertedId._id}`);
+            res.status(201).json({ message: "AQI data logged (inserted) successfully", id: result.upsertedId._id });
+        } else if (result.modifiedCount > 0) {
+            console.log(`AQI data updated for ${cityName} (lat: ${latitude}, lon: ${longitude})`);
+            res.status(200).json({ message: "AQI data logged (updated) successfully" });
+        } else {
+             console.log(`AQI data for ${cityName} (lat: ${latitude}, lon: ${longitude}) was already up-to-date.`);
+             res.status(200).json({ message: "AQI data already up-to-date" });
+        }
 
     } catch (err) {
-        console.error(`Error logging AQI data for ${cityName}:`, err);
+        console.error(`Error upserting AQI data for ${cityName}:`, err);
         res.status(500).json({ error: "Failed to log AQI data" });
     }
 });
