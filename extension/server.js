@@ -60,6 +60,33 @@ app.post('/api/plant-details', async (req, res) => {
     }
 });
 
+// --- API Endpoint for Random Plant ---
+app.get('/api/random-plant', async (req, res) => {
+    if (!db) {
+        return res.status(503).json({ error: "Database not connected" });
+    }
+
+    console.log("Received request for random plant details");
+
+    try {
+        const collection = db.collection(collectionName);
+        // Use aggregation pipeline with $sample to get 1 random document
+        const randomPlant = await collection.aggregate([{ $sample: { size: 1 } }]).toArray();
+
+        if (randomPlant.length > 0) {
+            console.log(`Found random plant: ${randomPlant[0].plant_name}`);
+            res.json(randomPlant[0]); // Return the single random plant object
+        } else {
+            res.status(404).json({ error: "No plants found in the collection" });
+        }
+
+    } catch (err) {
+        console.error("Error fetching random plant details from MongoDB:", err);
+        res.status(500).json({ error: "Failed to fetch random plant details" });
+    }
+});
+
+
 // --- Start Server ---
 async function startServer() {
     await connectDb(); // Connect to DB before starting listener
