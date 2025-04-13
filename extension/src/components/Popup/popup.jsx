@@ -89,6 +89,7 @@ const Popup = () => {
     : 'http://localhost:3001'; // Development URL (Base)
   const PLANT_DETAILS_API_URL = `${BACKEND_BASE_URL}/api/plant-details`;
   const RANDOM_PLANT_API_URL = `${BACKEND_BASE_URL}/api/random-plant`;
+  const LOG_AQI_API_URL = `${BACKEND_BASE_URL}/api/log-aqi`; // New endpoint URL
 
 
   // --- Helper Functions ---
@@ -181,13 +182,14 @@ const Popup = () => {
             setLocationError(null);
         }
         setLocationName(displayLocationName);
-        // Cache the fetched display name
+        // Cache the fetched display name AND the city name for logging
         try {
           chrome.storage.local.set({
             [`locationName_${latitude}_${longitude}`]: displayLocationName,
+            [`cityName_${latitude}_${longitude}`]: cityName, // Cache city name specifically
             locationNameCacheTimestamp: Date.now()
           });
-           console.log('Location name cached');
+           console.log('Location name and city name cached');
         } catch (e) { console.error("Error caching location name data:", e); }
       } else {
         throw new Error("OWM Reverse Geocoding returned no results.");
@@ -246,10 +248,11 @@ const Popup = () => {
     }
 
     let plantNamesToFetch = [];
+    let airQualityData = {}; // Define airQualityData here to be accessible for logging
 
     try {
       // Step 1 & 2: Get Air Pollution Data & Process
-      // ... (Air pollution fetch and processing logic remains the same) ...
+      console.log(`Fetching air pollution data for ${latitude}, ${longitude}...`);
       const airUrl = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${latitude}&lon=${longitude}&appid=${OWM_API_KEY}`;
       const airResponse = await fetch(airUrl);
       if (!airResponse.ok) throw new Error(`Air Pollution API error: ${airResponse.status}`);
@@ -269,7 +272,43 @@ const Popup = () => {
       const toluene = getRandomFloat(5.0, 20.0);
       const xylene = getRandomFloat(1.0, 10.0);
       const aqiValue = calculateIndiaAqi(pm2_5, pm10);
-      const airQualityData = { "PM2_5": pm2_5, "PM10": pm10, "NO": no, "NO2": no2, "NOx": nox, "NH3": nh3, "CO": co, "SO2": so2, "O3": o3, "Benzene": benzene, "Toluene": toluene, "Xylene": xylene, "AQI": aqiValue };
+      // Assign to the outer scope variable
+      airQualityData = { "PM2_5": pm2_5, "PM10": pm10, "NO": no, "NO2": no2, "NOx": nox, "NH3": nh3, "CO": co, "SO2": so2, "O3": o3, "Benzene": benzene, "Toluene": toluene, "Xylene": xylene, "AQI": aqiValue };
+
+      // --- Log AQI Data ---
+      try {
+        // Retrieve cached city name (best effort)
+        const cityCacheKey = `cityName_${latitude}_${longitude}`;
+        chrome.storage.local.get([cityCacheKey], async (result) => {
+          if (chrome.runtime.lastError) {
+             console.error("Error reading city name cache for logging:", chrome.runtime.lastError);
+             return; // Don't proceed with logging if cache read fails
+          }
+          const cityNameForLog = result[cityCacheKey] || 'Unknown'; // Use cached name or fallback
+
+          console.log(`Attempting to log AQI data for ${cityNameForLog}...`);
+          const logResponse = await fetch(LOG_AQI_API_URL, { // Use new constant
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              latitude,
+              longitude,
+              cityName: cityNameForLog,
+              aqiData: airQualityData // Send the constructed data
+            })
+          });
+          if (!logResponse.ok) {
+             // Log error but don't throw, as logging is secondary
+             console.error(`Failed to log AQI data: ${logResponse.status} - ${await logResponse.text()}`);
+          } else {
+             console.log("AQI data logged successfully.");
+          }
+        });
+      } catch (logError) {
+        // Catch synchronous errors during setup, unlikely here but good practice
+        console.error("Error initiating AQI data logging:", logError);
+      }
+      // --- End Log AQI Data ---
 
 
       // Step 3: Call ML API
@@ -479,9 +518,11 @@ const Popup = () => {
 
           // Check cache *only* for display name (Location Name Caching)
           const locationNameCacheKey = `locationName_${latitude}_${longitude}`;
+          const cityNameCacheKey = `cityName_${latitude}_${longitude}`; // Key for city name cache
           const locationTimestampKey = 'locationNameCacheTimestamp';
           try {
-            chrome.storage.local.get([locationNameCacheKey, locationTimestampKey], (result) => {
+            // Fetch both display name and city name from cache
+            chrome.storage.local.get([locationNameCacheKey, cityNameCacheKey, locationTimestampKey], (result) => {
               if (chrome.runtime.lastError) {
                 console.error("Error reading location name cache:", chrome.runtime.lastError);
                 getLocationName(latitude, longitude); // Fallback if storage read fails
@@ -495,9 +536,10 @@ const Popup = () => {
               if (cachedName && timestamp && (now - timestamp < CACHE_DURATION_LOCATION)) {
                 console.log("Using cached location name:", cachedName);
                 setLocationName(cachedName);
+                // Note: We don't need to set city name state, just ensure it's cached by getLocationName
               } else {
                 console.log("Location name cache invalid/missing, fetching fresh name...");
-                getLocationName(latitude, longitude); // Fetch display name using OWM
+                getLocationName(latitude, longitude); // Fetch display name using OWM (this also caches city name)
               }
             });
           } catch (storageError) {
@@ -673,6 +715,16 @@ const Popup = () => {
           </div>
         </>
       )}
+
+      {/* Deeper Analysis Button */}
+      <a
+        href="https://plant-recommender-dashboard.onrender.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="deeper-analysis-button"
+      >
+        → Deeper Analysis
+      </a>
     </div>
   );
 };

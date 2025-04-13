@@ -115,13 +115,15 @@ app.post('/api/log-aqi', async (req, res) => {
             timestamp: new Date() // Add/update a timestamp
         };
 
-        // Define the filter to find a document with the same coordinates
-        const filter = { latitude: latitude, longitude: longitude };
+        // Define the filter to find a document with the same city name
+        const filter = { cityName: cityName };
 
         // Define the update operation using $set to replace fields
+        // Include coordinates in $set as well, in case they differ slightly for the same city name over time
         const updateDoc = {
             $set: {
-                cityName: cityName, // Update city name in case it changes for coords
+                latitude: latitude,
+                longitude: longitude,
                 aqiData: aqiData,
                 timestamp: logEntry.timestamp // Use the timestamp from the logEntry object
             }
@@ -134,18 +136,26 @@ app.post('/api/log-aqi', async (req, res) => {
         const result = await collection.updateOne(filter, updateDoc, options);
 
         if (result.upsertedCount > 0) {
-            console.log(`AQI data inserted for ${cityName} with ID: ${result.upsertedId._id}`);
-            res.status(201).json({ message: "AQI data logged (inserted) successfully", id: result.upsertedId._id });
+            // Use result.upsertedId (which is an object containing _id) if available
+            const insertedId = result.upsertedId ? result.upsertedId._id : null;
+            console.log(`AQI data inserted for ${cityName} with ID: ${insertedId}`);
+            res.status(201).json({ message: "AQI data logged (inserted) successfully", id: insertedId });
         } else if (result.modifiedCount > 0) {
-            console.log(`AQI data updated for ${cityName} (lat: ${latitude}, lon: ${longitude})`);
+            console.log(`AQI data updated for city: ${cityName}`);
             res.status(200).json({ message: "AQI data logged (updated) successfully" });
-        } else {
-             console.log(`AQI data for ${cityName} (lat: ${latitude}, lon: ${longitude}) was already up-to-date.`);
+        } else if (result.matchedCount > 0) {
+             // matchedCount > 0 and modifiedCount === 0 means the data was identical
+             console.log(`AQI data for city: ${cityName} was already up-to-date.`);
              res.status(200).json({ message: "AQI data already up-to-date" });
+        } else {
+             // This case should ideally not happen with upsert=true unless filter is somehow invalid after insertion attempt
+             console.log(`AQI data for city: ${cityName} - No changes made.`);
+             res.status(200).json({ message: "AQI data - no changes made" });
         }
 
+
     } catch (err) {
-        console.error(`Error upserting AQI data for ${cityName}:`, err);
+        console.error(`Error upserting AQI data for city ${cityName}:`, err);
         res.status(500).json({ error: "Failed to log AQI data" });
     }
 });
