@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "PureUp",
+  "description": "Get plant suggestions and track weather conditions",
+  "version": "1.0.0",
+  "icons": {
+    "16": "images/Logo.png",
+    "48": "images/Logo.png",
+    "128": "images/Logo.png"
+  },
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "images/Logo.png",
+      "48": "images/Logo.png",
+      "128": "images/Logo.png"
+    }
+  },
+  "permissions": [
+    "storage",
+    "geolocation"
+  ],
+  "host_permissions": [
+    "https://api.waqi.info/*",
+    "https://nominatim.openstreetmap.org/*",
+    "https://api.openweathermap.org/*",
+    "https://fastapi-voting-based-model-api-for-plant.onrender.com/*",
+    "https://my-plamt-api.onrender.com/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; img-src 'self' data:; connect-src https://api.waqi.info/ https://nominatim.openstreetmap.org/ https://api.openweathermap.org/ https://fastapi-voting-based-model-api-for-plant.onrender.com/ https://my-plamt-api.onrender.com/"
+  }
+}

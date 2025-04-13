@@ -1,0 +1,33 @@
+/* Global styles */
+
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+:root {
+  --contaniner-width: 550px;
+}
+
+body {
+  height: 600px; 
+  /* Removed fixed width */
+  /* width: var(--contaniner-width); */ 
+  gap: 20px;
+  padding: 20px;
+  background: #f5f5f5;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Utility classes */
+.voltaire-regular {
+  font-family: "Voltaire", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
