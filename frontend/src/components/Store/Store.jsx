@@ -117,7 +117,7 @@ const Store = () => {
       </div>
 
       {/* Discount Strip */}
-      <div className="bg-yellow-400 py-3 px-4">
+      <div className="bg-[#2C3930] py-3 px-4">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-4">
           <div className="flex items-center bg-white rounded-full px-4 py-1 shadow-sm">
             <span className="font-bold text-green-700 mr-2">FRESH20</span>

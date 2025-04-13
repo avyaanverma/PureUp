@@ -6,12 +6,14 @@ import { getAllPlants } from "../services/api";
 import PlantDetails from "../components/PlantDetails";
 import FarmerSection from "../components/FarmerSection";
 import ProductList from "../components/ProductList";
-
+import { Navbar } from "../components/pages/Navbar/Navbar";
+import { Footer } from "../components/pages/Footer/Footer";
 
 const Home = () => {
     
     return (
         <div>
+            <Navbar/>
             {/* Hero Section */}
             <section className="heroSection flex flex-col md:flex-row  text-white  md:p-10 bg-[#212121] p-8 px-28 justify-center items-center">
                 <div className="left md:p-10 md:text-left p-8 space-y-4">
@@ -22,7 +24,7 @@ const Home = () => {
 
                 </div>
                 {/* Plant of the day and Thought of the day  */}
-                <div className="plantOfTheDay">
+                <div className="plantOfTheDay mt-10">
                     <img width={400} height={400} src="https://cdn.shopify.com/s/files/1/0624/7972/8867/files/Snake-plant-growing-guide.jpg" alt="Plantimage" />
                 </div>
             </section>
@@ -38,6 +40,9 @@ const Home = () => {
             <section>
             <section className="plants-for-sale text-white bg-[#212121] p-8 px-28">
                 <ProductList />
+            </section>
+            <section>
+                <Footer/>
             </section>
             </section>
         </div>
