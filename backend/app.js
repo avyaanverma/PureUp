@@ -9,6 +9,9 @@ const cors = require("cors");
 const plantRoutes = require('./routes/plantRoutes')
 const farmerRoutes = require("./routes/farmerRoutes")
 const productRoutes = require("./routes/productRoutes")
+const auth = require("./middleware/auth");
+const userRoutes = require('./routes/User');  // Adjust path based on your file structure
+
 
 app.use(bodyParser.json());
 const MONGO_URI = process.env.MONGO_URI;
@@ -17,6 +20,7 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
+
 const connectDB = async () => {
     try {
         await mongoose.connect(MONGO_URI);
@@ -28,10 +32,10 @@ const connectDB = async () => {
 };
 
 connectDB();
-
-app.use('/api', plantRoutes); // All routes will start with /api
-app.use("/api/farmers", farmerRoutes);
-app.use('/api/products', productRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api',auth, plantRoutes); // All routes will start with /api
+app.use("/api/farmers",auth, farmerRoutes);
+app.use('/api/products',auth, productRoutes);
 
 
 app.get('/', async(req,res)=>{
@@ -46,7 +50,7 @@ app.get('/', async(req,res)=>{
     }
 })
 
-app.get('/api/city/:city' , async (req, res)=>{
+app.get('/api/city/:city', auth , async (req, res)=>{
     const {city} = req.params;
     if(!city || typeof city !== 'string'){
         return res.status(500).json({success: false, message: "Invalid city name"});

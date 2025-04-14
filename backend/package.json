@@ -7,6 +7,7 @@
     "dotenv": "^16.4.7",
     "expres": "^0.0.5",
     "express": "^4.21.2",
+    "google-auth-library": "^9.15.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.10.1",
     "nodemailer": "^6.10.0",
@@ -17,7 +18,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "nodemon app.js"
   },
   "type": "commonjs",
   "author": "",
