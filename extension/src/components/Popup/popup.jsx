@@ -604,7 +604,9 @@ const Popup = () => {
     <div className={`popup-container ${modalPlantId ? 'modal-active' : ''}`}>
       {/* Header */}
       <header className="popup-header">
-        <img src="/images/Logo.png" alt="PureUp Logo" className="logo" />
+        <a href="https://pure-up-ft15.vercel.app/" target="_blank" rel="noopener noreferrer">
+          <img src="/images/Logo.png" alt="PureUp Logo" className="logo" />
+        </a>
         <button ref={settingsBtnRef} className="settings-button" onClick={() => setShowSettings(!showSettings)} aria-label="Settings">
           <img src="/images/Settings.png" alt="Settings" />
         </button>
