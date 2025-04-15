@@ -33,9 +33,11 @@ const Login = () => {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   // API base URL (consider moving this to an environment variable)
-  const BASE_URL = import.meta.env.BACKEND_URL; // e.g., http://localhost:8000
+  const BASE_URL = import.meta.env.VITE_BACKEND_URL; // e.g., http://localhost:8000
   const API_URL = `${BASE_URL}/api/user`;
-
+  console.log(import.meta.env);
+  
+  console.log(import.meta.env.VITE_BACKEND_URL)
   const floatUp = {
     initial: { y: 20, opacity: 0, scale:0.95 },
     animate: {

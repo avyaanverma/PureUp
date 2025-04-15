@@ -12,11 +12,12 @@ const productRoutes = require("./routes/productRoutes")
 const auth = require("./middleware/auth");
 const userRoutes = require('./routes/User');  // Adjust path based on your file structure
 
-
 app.use(bodyParser.json());
 const MONGO_URI = process.env.MONGO_URI;
+console.log(process.env.FRONTEND_URL);
+
 app.use(cors({
-    origin: "http://localhost:5173", // Change this to match your frontend URL
+    origin: '*', // Change this to match your frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
