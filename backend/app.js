@@ -11,6 +11,7 @@ const farmerRoutes = require("./routes/farmerRoutes")
 const productRoutes = require("./routes/productRoutes")
 const auth = require("./middleware/auth");
 const userRoutes = require('./routes/User');  // Adjust path based on your file structure
+const path = require("path");
 
 app.use(bodyParser.json());
 const MONGO_URI = process.env.MONGO_URI;
