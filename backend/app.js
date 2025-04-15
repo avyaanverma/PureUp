@@ -35,8 +35,8 @@ const connectDB = async () => {
 };
 
 connectDB();
-app.use('/api/user', userRoutes);
-app.use('/api',auth, plantRoutes); // All routes will start with /api
+app.use('/api/user', auth, userRoutes);
+app.use('/api', plantRoutes); // All routes will start with /api
 app.use("/api/farmers", farmerRoutes);
 app.use('/api/products', productRoutes);
 app.use(express.static(path.join(__dirname, "frontend/dist")));
