@@ -1,21 +1,23 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "app.js",
-        "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "app.js"
-      }
-    ],
-    "functions": {
-    "api/plant-of-the-day.js": {
-      "maxDuration": 30
+  "version": 2,
+  "builds": [
+    {
+      "src": "frontend/dist/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "backend/app.js",
+      "use": "@vercel/node"
     }
-  }
-  }
-  
+  ],
+  "routes": [
+    {
+      "src": "^/api/(.*)",
+      "dest": "/backend/app.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/dist/index.html"
+    }
+  ]
+}

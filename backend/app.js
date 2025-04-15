@@ -37,6 +37,7 @@ app.use('/api/user', userRoutes);
 app.use('/api',auth, plantRoutes); // All routes will start with /api
 app.use("/api/farmers",auth, farmerRoutes);
 app.use('/api/products',auth, productRoutes);
+app.use(express.static(path.join(__dirname, "frontend/dist")));
 
 
 app.get('/', async(req,res)=>{
@@ -50,7 +51,9 @@ app.get('/', async(req,res)=>{
 
     }
 })
-
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend/dist", "index.html"));
+  });
 app.get('/api/city/:city', auth , async (req, res)=>{
     const {city} = req.params;
     if(!city || typeof city !== 'string'){
