@@ -12,6 +12,7 @@ const productRoutes = require("./routes/productRoutes")
 const auth = require("./middleware/auth");
 const userRoutes = require('./routes/User');  // Adjust path based on your file structure
 const path = require("path");
+const Razorpay = require("razorpay")
 
 app.use(bodyParser.json());
 const MONGO_URI = process.env.MONGO_URI;
@@ -36,8 +37,8 @@ const connectDB = async () => {
 connectDB();
 app.use('/api/user', userRoutes);
 app.use('/api',auth, plantRoutes); // All routes will start with /api
-app.use("/api/farmers",auth, farmerRoutes);
-app.use('/api/products',auth, productRoutes);
+app.use("/api/farmers", farmerRoutes);
+app.use('/api/products', productRoutes);
 app.use(express.static(path.join(__dirname, "frontend/dist")));
 
 
@@ -71,8 +72,27 @@ app.get('/api/city/:city', auth , async (req, res)=>{
         res.status(500).json({success: false, message: 'Error fetching the API Data'})
     }
 })
-
-
+const razorpay = new Razorpay({
+    key_id: "YOUR_KEY_ID",
+    key_secret: "YOUR_KEY_SECRET",
+  });
+  
+  app.post("/create-order", async (req, res) => {
+    const { amount } = req.body;
+  
+    const options = {
+      amount: amount * 100, // paise
+      currency: "INR",
+      receipt: `receipt_order_${Date.now()}`,
+    };
+  
+    try {
+      const order = await razorpay.orders.create(options);
+      res.json(order);
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  });
 
 
 app.listen(PORT, ()=>{
