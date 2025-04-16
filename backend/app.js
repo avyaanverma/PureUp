@@ -1,3 +1,4 @@
+// app.js
 const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
@@ -35,7 +36,7 @@ const connectDB = async () => {
 };
 
 connectDB();
-app.use('/api/user', auth, userRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api', plantRoutes); // All routes will start with /api
 app.use("/api/farmers", farmerRoutes);
 app.use('/api/products', productRoutes);
@@ -53,9 +54,9 @@ app.get('/', async(req,res)=>{
 
     }
 })
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "frontend/dist", "index.html"));
-  });
+// app.get("*", (req, res) => {
+//     res.sendFile(path.join(__dirname, "frontend/dist", "index.html"));
+//   });
 app.get('/api/city/:city', auth , async (req, res)=>{
     const {city} = req.params;
     if(!city || typeof city !== 'string'){
